@@ -10,7 +10,6 @@ import telegram
 
 
 load_dotenv()
-
 PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
@@ -65,7 +64,7 @@ MES_ERROR_CODE_NOT_OK = (
     '\tДанные отправленного запроса:\n'
     '\t- тип запроса: "GET";\n'
     '\t- URL (эндпоинт): {endpoint};\n'
-    '\t- заголовок: {header}\n'
+    '\t- заголовок: {headers}\n'
     '\tДанные ответа:\n'
     '\t- ключ: {key};\n'
     '\t- данные по ключу: {data_by_key};\n'
@@ -96,7 +95,7 @@ MES_ERROR_REQUEST_EXCEPTION = (
     '\tДанные отправленного запроса:\n'
     '\t- тип запроса: "GET";\n'
     '\t- URL (эндпоинт): {endpoint};\n'
-    '\t- заголовок: {header}\n'
+    '\t- заголовок: {headers}\n'
     '\tОшибка:\n\t{error}'
 )
 MES_ERROR_UNKNOWN_STATUS = (
@@ -167,7 +166,7 @@ def get_api_answer(timestamp):
             params={'from_date': timestamp}
         )
         response_data = response.json()
-    except requests.RequestException as error:
+    except requests.exceptions.RequestException as error:
         raise Exception(
             MES_ERROR_REQUEST_EXCEPTION.format(
                 endpoint=ENDPOINT,
@@ -177,19 +176,19 @@ def get_api_answer(timestamp):
         )
 
     if response.status_code != HTTPStatus.OK:
-        MES_DEBUG_CODE_NOT_OK.format(code=response.status_code)
-
+        logger.debug(
+            MES_DEBUG_CODE_NOT_OK.format(code=response.status_code)
+        )
         for key in KEYS_IN_RESPONSE_WITH_CODE_NOT_OK:
-            if key in response_data:
-                raise Exception(
-                    MES_ERROR_CODE_NOT_OK.format(
-                        status_code=response.status_code,
-                        endpoint=ENDPOINT,
-                        headers=HEADERS,
-                        key=key,
-                        data_by_key=response_data[key]
-                    )
+            raise Exception(
+                MES_ERROR_CODE_NOT_OK.format(
+                    status_code=response.status_code,
+                    endpoint=ENDPOINT,
+                    headers=HEADERS,
+                    key=key,
+                    data_by_key=response_data[key]
                 )
+            )
     logger.debug(MES_DEBUG_CODE_OK)
     return response_data
 
