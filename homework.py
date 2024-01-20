@@ -28,136 +28,133 @@ HOMEWORK_VERDICTS = {
 }
 
 KEYS_IN_HOMEWORK = ('homework_name', 'status')
+KEYS_IN_RESPONSE_WITH_CODE_NOT_OK = ('error', 'code')
 
-MESSAGES = {
-    'debug': {
-        'send_message': 'Бот отправил слудющее сообщение:\n\t{message}.',
-        'code_200': 'Получен ответ "OK" от API (код 200).',
-        'response_is_dict': 'Данные в ответе API поступили в виде словаря.',
-        'key_in_dict': (
-            'В словаре данных из ответа API присутствует ключ "homeworks".'
-        ),
-        'homeworks_is_list': 'Набор домашних работ поступил в виде списка.',
-        'fields_is_ok': (
-            'Основные поля в ответе API соответствуют документации.'
-        ),
-        'tokens_is_ok': 'Токены проверены. Успех!',
-        'send_request': 'Запрос отправлен.',
-        'get_response': 'Ответ от API успешно получен.',
-    },
-    'info': {
-        'not_new_stasuses': 'Новые статусы домашних работ отсутсвуют.',
-        'new_status': (
-            'Изменился статус проверки работы "{homework}". {status}'
-        ),
-        'exit_from_programm': 'Программа принудительно остановлена.'
-    },
-    'error': {
-        'code_not_200': (
-            '\tСбой в работе программы: '
-            'код ответа API {status_code}!\n'
-            '\tДанные ответа:\n'
-            '\t- ключ: {key};\n'
-            '\t- данные по ключу: {data_by_key};\n'
-            '\t- ответ: {response};\n'
-        ),
-        'send_message_error': (
-            '\tОшибка при отправке ботом сообщения:\n{error}'
-        ),
-        'request_exception': (
-            '\tСбой в работе программы: ошибка при работе с запросом!\n'
-            '\tОтвет:\n{error}\n'
-        ),
-        'not_code_in_key_dict': (
-            'В словаре в ответе API отсутствует ключ "code"!\n'
-            '\tДанные отправленного запроса:\n'
-            '\tОтвет:\n\t{response}\n'
-        ),
-        'unknown_dict': (
-            'Cловарь в ответе API имеет неучтенный формат!\n'
-            '\tОтвет:\n{response}\n'
-        ),
-        'response_is_not_dict': (
-            'Ожидаемый тип данных в ответе API - словарь!'
-            'Полученный тип данных в ответе API: {type_data}!\n'
-        ),
-        'data_is_not_dict': (
-            'Ожидаемый тип данных в ответе API - словарь!'
-            'Полученный тип данных в ответе API: {type_data}!'
-        ),
-        'key_not_in_dict': (
-            'В словаре данных из ответа API отсутвует ключ "homeworks"!'
-            'Полученный словарь данных:\n{data}'
-        ),
-        'data_is_not_list': (
-            'Ожидаемый тип данных набора домашних работ - список!'
-            'Полученный тип данных набора домашних работ: {type_data}!'
-        ),
-        'key_not_in_homework': (
-            'Ошибка данных: '
-            'в объекте "homework" отсутствует ключ "{key}}"!'
-            'Поступивший объект:\n{homework}'
-        ),
-        'unknown_status': (
-            'Неучтенный статус домашней работы!\n'
-            '\tОжидаются: {keys}\n\tПолучен - {status}'
-        ),
-        'error_in_main': (
-            'Сбой в работе программы!\n{error}'
-        ),
-    },
-    'critical': {
-        'token': 'Отсутствует обязательная переменная окружения: {name_token}'
-    },
-    'data_request': (
-        '\tДанные отправленного запроса:\n'
-        '\t- тип запроса: "GET";\n'
-        '\t- URL (эндпоинт): {endpoint};\n'
-        '\t- токен авторизации: проверен при запуске;\n'
-        '\t- параметры: "from_date" = {timestamp};'
-    ),
-}
+# Далее - блок заготовок сообщений
+# Принцип наименования: MES_{level}_{long_name},
+# где: MES - сокращение от "MESSAGE";
+#      {level} - уровень критичности сообщения;
+#      {long_name} - наименование заготовки сообщения.
+
+MES_DEBUG_CODE_NOT_OK = 'Ответ, полученный от API не "OK" (код {code})'
+MES_DEBUG_CODE_OK = 'Получен ответ "OK" от API (код 200).'
+MES_DEBUG_ERROR_REPEAT = 'При новом запросе обнаружилась та же ошибка.'
+MES_DEBUG_FIELDS_IS_OK = (
+    'Основные поля в ответе API соответствуют документации.'
+)
+MES_DEBUG_HOMEWORKS_IS_LIST = 'Набор домашних работ поступил в виде списка.'
+MES_DEBUG_KEY_IN_DICT = (
+    'В словаре данных из ответа API присутствует ключ "homeworks".'
+)
+MES_DEBUG_KEYS_IN_HOMEWORK = 'Все ключи присутствуют в homework.'
+MES_DEBUG_MESSAGE_SEND = 'Бот отправил следующее сообщение:\n\t{message}.'
+MES_DEBUG_RESPONSE_IS_DICT = 'Данные в ответе API поступили в виде словаря.'
+MES_DEBUG_RESPONSE_GET = 'Ответ от API успешно получен.'
+MES_DEBUG_REQUEST_SEND = 'Запрос отправлен.'
+MES_DEBUG_STATUS_IS_KNOWN = 'Получен учтенный статус homework.'
+MES_DEBUG_TOKENS_IS_OK = 'Токены проверены. Успех!'
+
+MES_INFO_NEW_STATUS = (
+    'Изменился статус проверки работы "{homework}". {status}'
+)
+MES_INFO_NOT_NEW_STATUSES = 'Новые статусы домашних работ отсутсвуют.'
+MES_INFO_PROGRAMM_STOP = 'Программа принудительно остановлена.'
+
+MES_ERROR_CODE_NOT_OK = (
+    '\tСбой в работе программы: код ответа API {status_code}!\n'
+    '\tДанные отправленного запроса:\n'
+    '\t- тип запроса: "GET";\n'
+    '\t- URL (эндпоинт): {endpoint};\n'
+    '\t- заголовок: {header}\n'
+    '\tДанные ответа:\n'
+    '\t- ключ: {key};\n'
+    '\t- данные по ключу: {data_by_key};\n'
+)
+MES_ERROR_ERROR_IN_MAIN = (
+    'Сбой в работе программы!\n{error}'
+)
+MES_ERROR_HOMEWORKS_IS_NOT_LIST = (
+    '\tОжидаемый тип данных набора домашних работ - список!\n'
+    '\tПолученный тип данных набора домашних работ: {type_data}!'
+)
+MES_ERROR_KEY_NOT_IN_DICT = (
+    '\tВ словаре данных из ответа API отсутвует ключ "homeworks"!'
+)
+MES_ERROR_KEY_NOT_IN_HOMEWORK = (
+    '\tОшибка данных: в объекте "homework" отсутствует ключ "{key}"'
+)
+MES_ERROR_MESSAGE_SEND_ERROR = (
+    '\tОшибка при отправке ботом сообщения!\n'
+    '\tТекст ссобщения: {message}\n\tОшибка: {error}.'
+)
+MES_ERROR_RESPONSE_IS_NOT_DICT = (
+    '\tОжидаемый тип данных в ответе API - словарь!\n'
+    '\tПолученный тип данных в ответе API: {type_data}!'
+)
+MES_ERROR_REQUEST_EXCEPTION = (
+    '\tСбой в работе программы: ошибка при работе с запросом!\n'
+    '\tДанные отправленного запроса:\n'
+    '\t- тип запроса: "GET";\n'
+    '\t- URL (эндпоинт): {endpoint};\n'
+    '\t- заголовок: {header}\n'
+    '\tОшибка:\n\t{error}'
+)
+MES_ERROR_UNKNOWN_STATUS = (
+    'Неучтенный статус домашней работы: {status}!\n'
+)
+
+MES_CRITICAL_NOT_TOKEN = (
+    'Отсутствует обязательная переменная окружения: {name_token}'
+)
 
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    filename=__file__ + '.log',
-    filemode='w',
-    format=(
+logger = logging.getLogger(__name__)
+
+
+def set_logger():
+    """Функция настройки логгера."""
+    log_format = (
         '%(asctime)s [%(levelname)s]\n'
         '\tSource: file "%(pathname)s", line %(lineno)d, in %(funcName)s\n'
         '\t%(message)s'
-    ),
-)
-logging.Handler = logging.StreamHandler(stream=sys.stdout)
-logger = logging.getLogger(__name__)
+    )
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename=__file__ + '.log',
+        filemode='w',
+        format=log_format,
+    )
+    handler = logging.StreamHandler(stream=sys.stdout)
+    handler.setFormatter(logging.Formatter(log_format))
+    logger.addHandler(handler)
 
 
 def check_tokens():
     """Функция проверки наличия необходимых токенов."""
-    indicator = 1
+    indicator = True
     for token in TOKENS:
-        if (globals()[token] is None) or (globals()[token] == ''):
+        if not globals()[token]:
             logger.critical(
-                MESSAGES['critical']['token'].format(name_token=token)
+                MES_CRITICAL_NOT_TOKEN.format(name_token=token)
             )
-            indicator *= 0
-    if indicator == 0:
-        message = MESSAGES['info']['exit_from_programm']
+            indicator = False
+    if not indicator:
+        message = MES_INFO_PROGRAMM_STOP
         logger.info(message)
-        raise Exception(message)
+        raise AttributeError(message)
 
 
 def send_message(bot, message):
     """Функция отправки сообщения в чат Telegram."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
-        logger.debug(
-            MESSAGES['debug']['send_message'].format(message=message)
-        )
+        logger.debug(MES_DEBUG_MESSAGE_SEND.format(message=message))
     except Exception as error:
         logger.exception(
-            MESSAGES['error']['send_message_error'].format(error=error)
+            MES_ERROR_MESSAGE_SEND_ERROR.format(
+                message=message,
+                error=error
+            )
         )
 
 
@@ -169,121 +166,69 @@ def get_api_answer(timestamp):
             headers=HEADERS,
             params={'from_date': timestamp}
         )
-    except Exception as error:
-        message = (
-            MESSAGES['error']['request_exception'].format(
-                status_code=response.status_code,
+        response_data = response.json()
+    except requests.RequestException as error:
+        raise Exception(
+            MES_ERROR_REQUEST_EXCEPTION.format(
+                endpoint=ENDPOINT,
+                headers=HEADERS,
                 error=error
             )
-            + MESSAGES['data_request'].format(
-                endpoint=ENDPOINT,
-                timestamp=timestamp,
-            )
         )
-        logger.exception(message)
-        return message
 
     if response.status_code != HTTPStatus.OK:
-        response_data = response.json()
-        if not isinstance(response_data, dict):
-            raise TypeError(
-                MESSAGES['error']['response_is_not_dict'].format(
-                    status_code=response.status_code,
-                    type_data=type(response_data)
+        MES_DEBUG_CODE_NOT_OK.format(code=response.status_code)
+
+        for key in KEYS_IN_RESPONSE_WITH_CODE_NOT_OK:
+            if key in response_data:
+                raise Exception(
+                    MES_ERROR_CODE_NOT_OK.format(
+                        status_code=response.status_code,
+                        endpoint=ENDPOINT,
+                        headers=HEADERS,
+                        key=key,
+                        data_by_key=response_data[key]
+                    )
                 )
-                + MESSAGES['data_request'].format(
-                    endpoint=ENDPOINT,
-                    timestamp=timestamp,
-                )
-            )
-        logger.debug(MESSAGES['debug']['response_is_dict'])
-        if 'code' not in response_data and 'error' not in response_data:
-            raise ValueError(
-                MESSAGES['error']['unknown_dict'].format(
-                    status_code=response.status_code,
-                    response=response_data
-                )
-                + MESSAGES['data_request'].format(
-                    endpoint=ENDPOINT,
-                    timestamp=timestamp,
-                )
-            )
-        if 'error' in response_data:
-            raise Exception(
-                MESSAGES['error']['code_not_200'].format(
-                    status_code=response.status_code,
-                    key='error',
-                    data_by_key=response_data['error'],
-                    response=response_data,
-                ) + MESSAGES['data_request'].format(
-                    endpoint=ENDPOINT,
-                    timestamp=timestamp,
-                )
-            )
-        elif 'code' in response_data:
-            raise Exception(
-                MESSAGES['error']['code_not_200'].format(
-                    status_code=response.status_code,
-                    key='code',
-                    data_by_key=response_data['code'],
-                    response=response_data,
-                ) + MESSAGES['data_request'].format(
-                    endpoint=ENDPOINT,
-                    timestamp=timestamp,
-                )
-            )
-    logger.debug(MESSAGES['debug']['code_200'])
-    return response.json()
+    logger.debug(MES_DEBUG_CODE_OK)
+    return response_data
 
 
 def check_response(response):
     """Функция проверки ответа API на соответствие документации."""
     if not isinstance(response, dict):
         raise TypeError(
-            MESSAGES['error']['data_is_not_dict'].format(
-                type_data=type(response)
-            )
+            MES_ERROR_RESPONSE_IS_NOT_DICT.format(type_data=type(response))
         )
-    logger.debug(MESSAGES['debug']['response_is_dict'])
+    logger.debug(MES_DEBUG_RESPONSE_IS_DICT)
     if 'homeworks' not in response:
-        raise KeyError(
-            MESSAGES['error']['key_not_in_dict'].format(data=response)
-        )
-    logger.debug(MESSAGES['debug']['key_in_dict'])
+        raise KeyError(MES_ERROR_KEY_NOT_IN_DICT)
+    logger.debug(MES_DEBUG_KEY_IN_DICT)
     homeworks = response["homeworks"]
     if not isinstance(homeworks, list):
         raise TypeError(
-            MESSAGES['error']['data_is_not_list'].format(
-                type_data=type(response)
-            )
+            MES_ERROR_HOMEWORKS_IS_NOT_LIST.format(type_data=type(homeworks))
         )
-    logger.debug(MESSAGES['debug']['homeworks_is_list'])
-    logger.debug(MESSAGES['debug']['fields_is_ok'])
+    logger.debug(MES_DEBUG_HOMEWORKS_IS_LIST)
+    logger.debug(MES_DEBUG_FIELDS_IS_OK)
     return homeworks
 
 
 def parse_status(homework):
     """Функция извлечения статуса домашней работы."""
     for key in KEYS_IN_HOMEWORK:
-        if 'homework_name' not in homework:
+        if key not in homework:
             raise KeyError(
-                MESSAGES['error']['key_not_in_homework'].format(
-                    key=key,
-                    homework=type(homework)
-                )
+                MES_ERROR_KEY_NOT_IN_HOMEWORK.format(key=key)
             )
+    logger.debug(MES_DEBUG_KEYS_IN_HOMEWORK)
     homework_status = homework['status']
     if homework_status not in HOMEWORK_VERDICTS:
-        keys = ''
-        for key in HOMEWORK_VERDICTS.keys():
-            keys += (key + ', ')
         raise ValueError(
-            MESSAGES['error']['unknown_status'].format(
-                keys=keys[:-2],
-                status=homework_status
-            )
+            MES_ERROR_UNKNOWN_STATUS.format(status=homework_status)
         )
-    message = MESSAGES['info']['new_status'].format(
+    logger.debug(MES_DEBUG_STATUS_IS_KNOWN)
+    message = MES_INFO_NEW_STATUS.format(
         homework=homework['homework_name'],
         status=HOMEWORK_VERDICTS[homework_status]
     )
@@ -294,34 +239,34 @@ def parse_status(homework):
 def main():
     """Основная логика работы бота."""
     check_tokens()
-    logger.debug(MESSAGES['debug']['tokens_is_ok'])
+    logger.debug(MES_DEBUG_TOKENS_IS_OK)
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     timestamp = int(time.time())
+    message_error_last = ''
     while True:
         try:
-            logger.debug(MESSAGES['debug']['send_request'])
+            logger.debug(MES_DEBUG_REQUEST_SEND)
             response = get_api_answer(timestamp)
-            logger.debug(MESSAGES['debug']['get_response'])
-            timestamp = response['current_date']
+            logger.debug(MES_DEBUG_RESPONSE_GET)
+            timestamp = response.get('current_date', timestamp)
             homeworks = check_response(response)
-            if len(homeworks) == 0:
-                logger.info(MESSAGES['info']['not_new_stasuses'])
+            if not homeworks:
+                logger.info(MES_INFO_NOT_NEW_STATUSES)
             else:
                 homework = homeworks[0]
                 message = parse_status(homework)
                 send_message(bot, message)
-        except (KeyError, TypeError, ValueError) as error:
-            message = error.args[0]
-            logger.exception(message)
-            send_message(bot, message)
         except Exception as error:
-            message = MESSAGES['error']['error_in_main'].format(
-                error=error.args[0]
-            )
-            logger.exception(message)
-            send_message(bot, message)
+            message = MES_ERROR_ERROR_IN_MAIN.format(error=error.args[0])
+            if message != message_error_last:
+                logger.exception(message)
+                send_message(bot, message)
+                message_error_last = message
+            else:
+                logger.debug(MES_DEBUG_ERROR_REPEAT)
         time.sleep(RETRY_PERIOD)
 
 
 if __name__ == '__main__':
+    set_logger()
     main()
