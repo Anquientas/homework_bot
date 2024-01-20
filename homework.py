@@ -112,10 +112,7 @@ logger = logging.getLogger(__name__)
 
 def check_tokens():
     """Функция проверки наличия необходимых токенов."""
-    tokens = []
-    for token in TOKENS:
-        if not globals()[token]:
-            tokens.append(token)
+    tokens = [token for token in TOKENS if not globals()[token]]
     if tokens:
         message = NOT_TOKEN.format(tokens=tokens)
         logger.critical(message)
@@ -146,15 +143,15 @@ def get_api_answer(timestamp):
     }
     try:
         response = requests.get(**request_data)
-        response_data = response.json()
     except requests.exceptions.RequestException as error:
-        raise OSError(
+        ConnectionError
+        raise ConnectionError(
             REQUEST_EXCEPTION.format(
                 error=error,
                 **request_data
             )
         )
-
+    response_data = response.json()
     if response.status_code != HTTPStatus.OK:
         raise ValueError(
             CODE_NOT_OK.format(
@@ -239,10 +236,9 @@ def main():
                     timestamp = response.get('current_date', timestamp)
         except Exception as error:
             message = ERROR_IN_MAIN.format(error=error)
-            if message != message_error_last:
-                logger.exception(message)
-                if send_message(bot, message):
-                    message_error_last = message
+            logger.exception(message)
+            if message != message_error_last and send_message(bot, message):
+                message_error_last = message
             else:
                 logger.debug(ERROR_REPEAT)
         time.sleep(RETRY_PERIOD)
