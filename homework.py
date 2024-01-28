@@ -74,7 +74,7 @@ KEY_NOT_IN_HOMEWORK = (
 MESSAGE_SEND = 'Бот отправил следующее сообщение:\n\t{message}'
 MESSAGE_SEND_ERROR = (
     '\tОшибка при отправке ботом сообщения!\n'
-    '\tТекст ссобщения: {message}\n\tОшибка: {error}.'
+    '\tТекст сообщения: {message}\n\tОшибка: {error}.'
 )
 NEW_STATUS = (
     'Изменился статус проверки работы "{homework}". {status}'
@@ -144,7 +144,6 @@ def get_api_answer(timestamp):
     try:
         response = requests.get(**request_data)
     except requests.exceptions.RequestException as error:
-        ConnectionError
         raise ConnectionError(
             REQUEST_EXCEPTION.format(
                 error=error,
